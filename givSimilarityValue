@@ -1,0 +1,69 @@
+import math
+import re
+from collections import Counter
+
+WORD = re.compile(r'\w+')
+
+
+def get_cosine(vec1, vec2):
+    intersection = set(vec1.keys()) & set(vec2.keys())
+    #print("vec1.elements()",vec1.keys())
+    #print("vec2.elements()",vec2.keys())
+    #print("taking intersection of these two")
+
+    numerator = sum([vec1[x] * vec2[x] for x in intersection])
+    #print("[vec1[x] * vec2[x] for x in intersection]",[vec1[x] * vec2[x] for x in intersection])
+    #print("numerator",numerator)
+
+    sum1 = sum([vec1[x] ** 2 for x in vec1.keys()])
+    #print("[vec1[x] ** 2 for x in vec1.keys()]",[vec1[x] ** 2 for x in vec1.keys()])
+    #print("sum1",sum1)
+    sum2 = sum([vec2[x] ** 2 for x in vec2.keys()])
+    #print("[vec2[x] ** 2 for x in vec2.keys()]",[vec2[x] ** 2 for x in vec2.keys()])
+    #print("sum2",sum2)
+    denominator = math.sqrt(sum1) * math.sqrt(sum2)
+    #print("denominator",denominator)
+    if not denominator:
+        return 0.0
+    else:
+        #print("float(numerator) / denominator", (numerator) / denominator)
+        return float(numerator) / denominator
+
+
+def text_to_vector(text):
+    words = WORD.findall(text)
+    return Counter(text)
+
+
+def givSimilarityValue(text1, text2):
+    vector1 = text_to_vector(text1)
+    vector1mine=vector1.keys()
+    #print("vector1mine",vector1)
+    vector2 = text_to_vector(text2)
+    cosine = round(get_cosine(vector1, vector2), 2) * 100
+    Sval = 0
+    if cosine > 90:
+        Sval = 90
+    elif cosine > 80:
+        Sval = 80
+    elif cosine > 70:
+        Sval = 70
+    elif cosine > 60:
+        Sval = 60
+    elif cosine > 50:
+        Sval = 50
+    elif cosine > 40:
+        Sval = 40
+    elif cosine > 30:
+        Sval = 30
+    elif cosine > 20:
+        Sval = 20
+    elif cosine > 10:
+        Sval = 10
+    else:
+        Sval = 0
+    return Sval
+
+
+Svalue = givSimilarityValue("photosynthasis", "photosynthesis")
+print(Svalue)
